@@ -1,0 +1,22 @@
+{
+  "name": "μRSS",
+  "version": "0.0.1",
+  "description": "Simple RSS built for humans!",
+  "permissions": [
+    "<all_urls>",
+    "notifications",
+    "storage",
+    "unlimitedStorage"
+  ],
+  "options_page": "options/index.html",
+  "background": {
+    "scripts": [
+      "background/index.ts"
+    ],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_popup": "popup/index.html"
+  },
+  "manifest_version": 2
+}
