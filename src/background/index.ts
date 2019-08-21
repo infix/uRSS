@@ -2,6 +2,9 @@ import { browser } from "webextension-polyfill-ts";
 import { Message } from "../shared/Message";
 import localForage from "localforage";
 import nanoid from "nanoid";
+import Parser from "rss-parser";
+
+const parser = new Parser();
 
 localForage.config({
   driver: localForage.LOCALSTORAGE,
@@ -26,7 +29,11 @@ browser.runtime.onMessage.addListener(async (message: Message) => {
     case "ADD_FEED_ITEM": {
       const { url } = message.payload;
       const feedList: any = await localForage.getItem("feedList");
-      const newItem = { id: nanoid(), url };
+      const { description, title, items, link } = await parser.parseURL(url);
+
+      const newItem = {
+        id: nanoid(), url, description, title, items, link,
+      };
       await localForage.setItem("feedList", [...feedList, newItem]);
       return newItem;
     }
