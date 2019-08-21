@@ -1,6 +1,7 @@
 type GET_FEED_LIST = "GET_FEED_LIST";
 type ADD_FEED_ITEM = "ADD_FEED_ITEM";
 type REMOVE_FEED_ITEM = "REMOVE_FEED_ITEM";
+type GET_FEED_ITEM = "GET_FEED_ITEM";
 
 type GetFeedList = {
   type: GET_FEED_LIST
@@ -20,4 +21,15 @@ type RemoveFeedItem = {
   }
 }
 
-export type Message = GetFeedList | AddFeedItem | RemoveFeedItem
+type GetFeedItem = {
+  type: GET_FEED_ITEM,
+  payload: {
+    id: string
+  }
+}
+
+export type Message =
+  | GetFeedList
+  | AddFeedItem
+  | RemoveFeedItem
+  | GetFeedItem

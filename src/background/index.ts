@@ -36,6 +36,11 @@ browser.runtime.onMessage.addListener(async (message: Message) => {
       const newFeedList = feedList.filter(item => item.id != id);
       return await localForage.setItem("feedList", newFeedList);
     }
+    case "GET_FEED_ITEM": {
+      const { id } = message.payload;
+      const feedList: any = await localForage.getItem("feedList");
+      return feedList.find(item => item.id == id);
+    }
     default:
       return;
   }
