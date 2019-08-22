@@ -16,6 +16,7 @@
     "@types/react-router-dom": "^4.3.4",
     "@types/rebass": "^3.0.4",
     "parcel-bundler": "^1.12.3",
+    "parcel-plugin-bundle-visualiser": "^1.2.0",
     "parcel-plugin-web-extension": "^1.5.2",
     "typescript": "^3.5.3"
   },
