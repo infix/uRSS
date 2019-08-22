@@ -48,6 +48,14 @@ browser.runtime.onMessage.addListener(async (message: Message) => {
       const feedList: any = await localForage.getItem("feedList");
       return feedList.find(item => item.id == id);
     }
+    case "UPDATE_FEED_ITEM": {
+      const { id, data } = message.payload;
+      const feedList: any[] = await localForage.getItem("feedList");
+      const index = feedList.findIndex(feed => feed.id == id);
+      console.log({ index, feed: feedList[index], data });
+      feedList[index] = { ...feedList[index], ...data };
+      return await localForage.setItem("feedList", feedList);
+    }
     default:
       return;
   }

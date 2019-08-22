@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { Box, Flex, Link, Text } from "rebass";
+import { Box, Link, Text } from "rebass";
 import { browser } from "webextension-polyfill-ts";
 import { Message } from "../../shared/Message";
-import { Icon } from "../../shared/components/Icon";
 import { TimeDistance } from "../../shared/components/TimeDistance";
+import { FeedHeader } from "./FeedHeader";
 
 type props = RouteComponentProps<{ id: string }>;
 
@@ -22,12 +22,7 @@ export const Feed: React.FC<props> = ({ match, history }) => {
       {feed &&
       (
         <>
-          <Flex>
-            <Box style={{ cursor: "pointer" }} onClick={() => history.push("/")} m={2}>
-              <Icon>arrow_back</Icon>
-            </Box>
-            <Text fontSize={3} my={2} textAlign={"center"} color="secondary">{feed.title}</Text>
-          </Flex>
+          <FeedHeader id={id} title={feed.title} />
           <Box mx={2}>
             {feed.items.map(item => (
               <Box key={item.id} my={2}>
