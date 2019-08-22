@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, TextProps } from "rebass";
-import { formatDistance } from "date-fns";
+import formatDistance from "date-fns/formatDistance";
 
 interface props extends TextProps {
   startDate: Date;
