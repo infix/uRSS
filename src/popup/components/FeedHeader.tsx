@@ -45,7 +45,7 @@ export const FeedHeader = withRouter(class extends Component<Props, State> {
         </Box>
 
         <Title color={"secondary"} onChange={this.handleChange} flex={1} fontSize={4}
-               spellcheck="false" style={{ margin: "0 auto" }} html={title} />
+               spellCheck={false} style={{ margin: "0 auto" }} html={title} />
       </Flex>
     );
   }
