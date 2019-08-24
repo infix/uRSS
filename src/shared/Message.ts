@@ -5,6 +5,7 @@ type ADD_FEED_ITEM = "ADD_FEED_ITEM";
 type REMOVE_FEED_ITEM = "REMOVE_FEED_ITEM";
 type GET_FEED_ITEM = "GET_FEED_ITEM";
 type UPDATE_FEED_ITEM = "UPDATE_FEED_ITEM";
+type SORT_FEED_LIST = "SORT_FEED_LIST";
 
 type GetFeedList = {
   type: GET_FEED_LIST
@@ -39,9 +40,17 @@ type UpdateFeedItem = {
   };
 }
 
+type SortFeedList = {
+  type: SORT_FEED_LIST,
+  payload: {
+    order: number[]
+  }
+}
+
 export type Message =
   | GetFeedList
   | AddFeedItem
   | RemoveFeedItem
   | GetFeedItem
   | UpdateFeedItem
+  | SortFeedList

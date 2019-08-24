@@ -22,9 +22,7 @@ browser.runtime.onInstalled.addListener(async details => {
 browser.runtime.onMessage.addListener(async (message: Message) => {
   switch (message.type) {
     case "GET_FEED_LIST": {
-      const feedList = await localForage.getItem("feedList");
-      console.log(feedList);
-      return feedList;
+      return await localForage.getItem("feedList");
     }
     case "ADD_FEED_ITEM": {
       const { url } = message.payload;
@@ -55,6 +53,24 @@ browser.runtime.onMessage.addListener(async (message: Message) => {
       console.log({ index, feed: feedList[index], data });
       feedList[index] = { ...feedList[index], ...data };
       return await localForage.setItem("feedList", feedList);
+    }
+    case "SORT_FEED_LIST": {
+      // create a dictionary that holds the mapping between id, and index
+      const order = message.payload.order
+        .reduce((ids, currId, index) => {
+          ids[currId] = index;
+          return ids;
+        }, {});
+
+      // Nothing to do.
+      if (Object.keys(order).length == 0)
+        return;
+
+      const feedList: any[] = await localForage.getItem("feedList");
+      const sortedFeedList = feedList
+        .sort((a, b) => order[a.id] - order[b.id]);
+
+      return await localForage.setItem("feedList", sortedFeedList);
     }
     default:
       return;
