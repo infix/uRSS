@@ -97,9 +97,9 @@ function notifyNewItems(items: Parser.Item[]) {
     const iconUrl = `https://s2.googleusercontent.com/s2/favicons?domain=${link}`;
 
     const notificationId = await browser.notifications.create({
-      title,
+      title: "uRSS",
       type: "basic",
-      message: "",
+      message: title,
       contextMessage: "uRSS",
       iconUrl,
     });
