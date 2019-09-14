@@ -67,20 +67,31 @@ browser.notifications.onClosed.addListener((id) => {
 
 const periodInMinutes = process.env.NODE_ENV == "production" ? 1 : 0.1;
 
+const notificationSound = new Audio(browser.runtime.getURL("../assets/notification.wav"));
+
 browser.alarms.create("CHECK_UPDATES", { periodInMinutes });
 
 browser.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name == "CHECK_UPDATES") {
     const feedList: any = await localForage.getItem("feedList");
+    let updated = false;
     const updatedFeedList = feedList.map(async feed => {
       const { items, title } = await parser.parseURL(feed.url);
       const newItems = getNewItems(feed.items, items);
+      if (newItems.length) {
+        updated = true;
+      }
       notifyNewItems(newItems.map(item => ({ fetchDate: new Date(), ...item })), title);
       feed.items = [...newItems, ...feed.items];
       return feed;
     });
 
-    await localForage.setItem("feedList", await Promise.all(updatedFeedList));
+    const newFeedList = await Promise.all(updatedFeedList);
+
+    if (updated) {
+      await notificationSound.play();
+    }
+    await localForage.setItem("feedList", newFeedList);
   }
 });
 

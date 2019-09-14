@@ -16,6 +16,9 @@
     ],
     "persistent": true
   },
+  "web_accessible_resources": [
+    "assets/notification.wav"
+  ],
   "browser_action": {
     "default_popup": "popup/index.html"
   },
