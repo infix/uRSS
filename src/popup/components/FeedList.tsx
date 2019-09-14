@@ -18,7 +18,7 @@ const DragHandle = SortableHandle(() => (
 ));
 
 const SortableItem = SortableElement(({ item }) => (
-  <Flex flexDirection={"row"}>
+  <Flex p={1} flexDirection={"row"}>
     <DragHandle />
     <FeedListItem {...item} />
   </Flex>

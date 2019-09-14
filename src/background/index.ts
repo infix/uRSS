@@ -1,8 +1,9 @@
-import { browser } from "webextension-polyfill-ts";
+import { browser, BrowserAction } from "webextension-polyfill-ts";
 import localForage from "localforage";
 import Parser from "rss-parser";
 import { messageHandler } from "./messageHandler";
 import differenceInMinutes from "date-fns/differenceInMinutes";
+import ColorValue = BrowserAction.ColorValue;
 
 export const parser = new Parser();
 
@@ -56,6 +57,7 @@ function notifyNewItems(items: NotificationItem[], title: string) {
 }
 
 browser.notifications.onClicked.addListener(async (id) => {
+  // TODO update: add logic to remove unread status
   await browser.tabs.create({ url: notificationsMap.get(id) });
   await browser.notifications.clear(id);
   notificationsMap.delete(id);
@@ -71,6 +73,11 @@ const notificationSound = new Audio(browser.runtime.getURL("../assets/notificati
 
 browser.alarms.create("CHECK_UPDATES", { periodInMinutes });
 
+async function updateBadge(value: number, bg: ColorValue = "#000") {
+  await browser.browserAction.setBadgeBackgroundColor({ color: bg });
+  await browser.browserAction.setBadgeText({ text: value > 100 ? "∞" : value.toString() });
+}
+
 browser.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name == "CHECK_UPDATES") {
     const feedList: any = await localForage.getItem("feedList");
@@ -82,12 +89,15 @@ browser.alarms.onAlarm.addListener(async (alarm) => {
         updated = true;
       }
       notifyNewItems(newItems.map(item => ({ fetchDate: new Date(), ...item })), title);
-      feed.items = [...newItems, ...feed.items];
+      feed.items = [...newItems.map(i => ({ unread: true, ...i })), ...feed.items];
+      feed.unread = feed.items.reduce((acc, cur) => cur.unread ? acc + 1 : acc, 0);
       return feed;
     });
 
-    const newFeedList = await Promise.all(updatedFeedList);
+    const newFeedList: any[] = await Promise.all(updatedFeedList);
+    const totalUnread = newFeedList.reduce((acc, cur) => cur.unread ? acc + cur.unread : acc, 0);
 
+    await updateBadge(totalUnread);
     if (updated) {
       await notificationSound.play();
     }
