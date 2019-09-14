@@ -25,7 +25,7 @@ export const Feed: React.FC<props> = ({ match, history }) => {
           <FeedHeader id={id} title={feed.title} />
           <Box mx={2}>
             {feed.items.map(item => (
-              <Box key={item.id} my={2}>
+              <Box key={item.link} my={2}>
                 <Link label={item.content} href={item.link} target="_blank">
                   <Text color={"primary"} fontSize={"smaller"}>{item.title}</Text>
                 </Link>
