@@ -7,3 +7,5 @@
 !.prettierrc
 !.gitignore
 !yarn.lock
+!README.md
+!LICENSE.md

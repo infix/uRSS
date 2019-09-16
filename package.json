@@ -2,7 +2,7 @@
   "private": true,
   "name": "uRSS",
   "version": "0.0.1",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "scripts": {
     "start": "parcel --hmr-hostname localhost src/manifest.json",
     "build": "parcel build --no-source-maps src/manifest.json"
