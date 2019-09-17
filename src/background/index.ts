@@ -17,6 +17,11 @@ browser.runtime.onInstalled.addListener(async details => {
   console.log(details);
   if (details.reason == "install") {
     await localForage.setItem("feedList", []);
+  } else if (details.reason == "update") {
+    const feedList = await localForage.getItem("feedList");
+    if (!feedList) {
+      await localForage.setItem("feedList", []);
+    }
   }
 });
 
