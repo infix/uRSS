@@ -12,7 +12,11 @@ async function addFeedItem(message) {
   const feedList: any = await localForage.getItem("feedList");
   const { description, title, items, link } = await parser.parseURL(url);
 
-  const newItem = { id: nanoid(), url, description, title, items, link };
+  const newItem = {
+    id: nanoid(), url, description, title, link,
+    items: items.map(i => ({ unread: true, ...i })),
+  };
+
   await localForage.setItem("feedList", [...feedList, newItem]);
   return newItem;
 }
