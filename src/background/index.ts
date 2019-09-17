@@ -75,7 +75,8 @@ browser.alarms.create("CHECK_UPDATES", { periodInMinutes });
 
 async function updateBadge(value: number, bg: ColorValue = "#000") {
   await browser.browserAction.setBadgeBackgroundColor({ color: bg });
-  await browser.browserAction.setBadgeText({ text: value > 100 ? "∞" : value.toString() });
+  const text = value > 100 ? "∞" : value == 0 ? "" : value.toString();
+  await browser.browserAction.setBadgeText({ text });
 }
 
 browser.alarms.onAlarm.addListener(async (alarm) => {
