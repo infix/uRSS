@@ -73,6 +73,13 @@ const notificationSound = new Audio(browser.runtime.getURL("../assets/notificati
 
 browser.alarms.create("CHECK_UPDATES", { periodInMinutes });
 
+/**
+ * @name updateBadge
+ * @description Sets the extension badge text depending on the number of
+ *  unseen items.
+ * @param value {number} That value that should be displayed
+ * @param bg {ColorValue} The background color
+ */
 async function updateBadge(value: number, bg: ColorValue = "#000") {
   await browser.browserAction.setBadgeBackgroundColor({ color: bg });
   const text = value > 100 ? "∞" : value == 0 ? "" : value.toString();
