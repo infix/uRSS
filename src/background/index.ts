@@ -8,7 +8,7 @@ import ColorValue = BrowserAction.ColorValue;
 export const parser = new Parser();
 
 localForage.config({
-  driver: localForage.LOCALSTORAGE,
+  driver: localForage.INDEXEDDB,
   name: "uRSS",
   version: 1,
 });
