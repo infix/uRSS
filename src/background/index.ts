@@ -96,7 +96,12 @@ browser.alarms.onAlarm.addListener(async (alarm) => {
     const feedList: any = await localForage.getItem("feedList");
     let updated = false;
     const updatedFeedList = feedList.map(async feed => {
-      const { items, title } = await parser.parseURL(feed.url);
+      const { items, title } = await parser.parseURL(feed.url)
+        .catch(e => {
+          console.error(e);
+          return Promise.resolve(feed);
+        });
+
       const newItems = getNewItems(feed.items, items);
       if (newItems.length) {
         updated = true;
