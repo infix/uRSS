@@ -2,6 +2,7 @@ import localForage from "localforage";
 import nanoid from "nanoid";
 import { parser } from "./index";
 import { Message } from "../shared/Message";
+import { browser } from "webextension-polyfill-ts";
 
 async function getFeedList() {
   return await localForage.getItem("feedList");
@@ -62,7 +63,11 @@ async function sortFeedList(message) {
   return await localForage.setItem("feedList", sortedFeedList);
 }
 
-export const messageHandler = async (message: Message) => {
+const closeCurrentTab = async (tabId) => {
+  return browser.tabs.remove(tabId);
+};
+
+export const messageHandler = async (message: Message, sender) => {
   switch (message.type) {
     case "GET_FEED_LIST":
       return await getFeedList();
@@ -76,5 +81,7 @@ export const messageHandler = async (message: Message) => {
       return await updateFeedItem(message);
     case "SORT_FEED_LIST":
       return await sortFeedList(message);
+    case "CLOSE_CURRENT_TAB":
+      return await closeCurrentTab(sender.tab.id);
   }
 };

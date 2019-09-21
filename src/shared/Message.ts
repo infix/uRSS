@@ -6,6 +6,7 @@ type REMOVE_FEED_ITEM = "REMOVE_FEED_ITEM";
 type GET_FEED_ITEM = "GET_FEED_ITEM";
 type UPDATE_FEED_ITEM = "UPDATE_FEED_ITEM";
 type SORT_FEED_LIST = "SORT_FEED_LIST";
+type CLOSE_CURRENT_TAB = "CLOSE_CURRENT_TAB";
 
 type GetFeedList = {
   type: GET_FEED_LIST
@@ -47,6 +48,10 @@ type SortFeedList = {
   }
 }
 
+type CloseCurrentTab = {
+  type: CLOSE_CURRENT_TAB
+}
+
 export type Message =
   | GetFeedList
   | AddFeedItem
@@ -54,3 +59,4 @@ export type Message =
   | GetFeedItem
   | UpdateFeedItem
   | SortFeedList
+  | CloseCurrentTab

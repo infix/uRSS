@@ -7,7 +7,9 @@
     "notifications",
     "alarms",
     "storage",
-    "unlimitedStorage"
+    "unlimitedStorage",
+    "tabs",
+    "activeTab"
   ],
   "options_page": "options/index.html",
   "background": {
@@ -22,5 +24,15 @@
   "browser_action": {
     "default_popup": "popup/index.html"
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "contentScripts/index.tsx"
+      ]
+    }
+  ],
   "manifest_version": 2
 }
