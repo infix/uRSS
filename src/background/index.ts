@@ -1,9 +1,12 @@
-import { browser, BrowserAction } from "webextension-polyfill-ts";
+import { browser, BrowserAction, WebRequest } from "webextension-polyfill-ts";
 import localForage from "localforage";
 import Parser from "rss-parser";
 import { messageHandler } from "./messageHandler";
 import differenceInMinutes from "date-fns/differenceInMinutes";
+import { RENDER_SUBSCRIPTION_FEED } from "../contentScripts";
 import ColorValue = BrowserAction.ColorValue;
+import RequestFilter = WebRequest.RequestFilter;
+import OnCompletedOptions = WebRequest.OnCompletedOptions;
 
 export const parser = new Parser();
 
@@ -123,3 +126,37 @@ browser.alarms.onAlarm.addListener(async (alarm) => {
   }
 });
 
+const filter: RequestFilter = { urls: [], types: ["main_frame"] };
+const extraInfoSpec: OnCompletedOptions[] = ["responseHeaders"];
+browser.webRequest.onCompleted.addListener(async details => {
+  const feedHeaders = [
+    "application/atom+xml",
+    "application/rss+xml",
+    "application/rdf+xml",
+    "application/xml",
+    "text/rss+xml",
+    "text/xml",
+  ];
+
+  console.log({ details });
+
+  const contentType = details.responseHeaders
+    .find(h => h.name.toLowerCase() == "content-type");
+
+  if (!contentType)
+    return;
+
+  const isFeed: boolean = feedHeaders.some(h => contentType.value.includes(h));
+
+  if (!isFeed)
+    return;
+
+  const feed = await parser.parseURL(details.url).catch(() => null);
+
+  if (!feed)
+    return;
+
+  const message = { type: RENDER_SUBSCRIPTION_FEED, payload: { feed } };
+  const tabs = await browser.tabs.query({ active: true });
+  browser.tabs.sendMessage(tabs[0].id, message).then(console.log, console.error);
+}, filter, extraInfoSpec);
