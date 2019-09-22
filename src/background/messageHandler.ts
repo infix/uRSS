@@ -67,21 +67,23 @@ const closeCurrentTab = async (tabId) => {
   return browser.tabs.remove(tabId);
 };
 
-export const messageHandler = async (message: Message, sender) => {
+export const messageHandler = (message: Message, sender) => {
   switch (message.type) {
     case "GET_FEED_LIST":
-      return await getFeedList();
+      return getFeedList();
     case "ADD_FEED_ITEM":
-      return await addFeedItem(message);
+      return addFeedItem(message);
     case "REMOVE_FEED_ITEM":
-      return await removeFeedItem(message);
+      return removeFeedItem(message);
     case "GET_FEED_ITEM":
-      return await getFeedItem(message);
+      return getFeedItem(message);
     case "UPDATE_FEED_ITEM":
-      return await updateFeedItem(message);
+      return updateFeedItem(message);
     case "SORT_FEED_LIST":
-      return await sortFeedList(message);
+      return sortFeedList(message);
     case "CLOSE_CURRENT_TAB":
-      return await closeCurrentTab(sender.tab.id);
+      return closeCurrentTab(sender.tab.id);
+    default:
+      return undefined;
   }
 };

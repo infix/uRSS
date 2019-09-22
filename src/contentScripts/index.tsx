@@ -5,7 +5,7 @@ import { Subscription } from "./subscription";
 
 export const RENDER_SUBSCRIPTION_FEED = "RENDER_SUBSCRIPTION_FEED";
 
-browser.runtime.onMessage.addListener(async message => {
+browser.runtime.onMessage.addListener((message) => {
   if (message.type == RENDER_SUBSCRIPTION_FEED) {
     const root = document.createElement("div");
     root.id = "#app";
@@ -15,5 +15,8 @@ browser.runtime.onMessage.addListener(async message => {
 
     document.body.appendChild(root);
     render(<Subscription {...message.payload.feed} />, root);
+    return Promise.resolve();
+  } else {
+    return undefined;
   }
 });
