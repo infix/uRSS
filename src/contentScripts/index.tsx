@@ -1,6 +1,4 @@
 import { browser } from "webextension-polyfill-ts";
-import React from "react";
-import { render } from "react-dom";
 import { Subscription } from "./subscription";
 
 export const RENDER_SUBSCRIPTION_FEED = "RENDER_SUBSCRIPTION_FEED";
@@ -14,8 +12,10 @@ browser.runtime.onMessage.addListener((message) => {
     [...document.body.children].forEach(child => child.remove());
 
     document.body.appendChild(root);
-    render(<Subscription {...message.payload.feed} />, root);
-    return Promise.resolve();
+    return Promise.all([import("react"), import("react-dom")])
+      .then(([React, ReactDOM]) => {
+        ReactDOM.render(<Subscription {...message.payload.feed} />, root);
+      });
   } else {
     return undefined;
   }
