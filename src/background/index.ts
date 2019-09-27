@@ -156,7 +156,11 @@ browser.webRequest.onCompleted.addListener(async details => {
   if (!feed)
     return;
 
-  const message = { type: RENDER_SUBSCRIPTION_FEED, payload: { feed } };
+  const message = {
+    type: RENDER_SUBSCRIPTION_FEED,
+    payload: { feed: { ...feed, feedUrl: details.url } },
+  };
+
   const tabs = await browser.tabs.query({ active: true });
   browser.tabs.sendMessage(tabs[0].id, message).then(console.log, console.error);
 }, filter, extraInfoSpec);
