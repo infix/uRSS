@@ -4,6 +4,7 @@ import Parser from "rss-parser";
 import { messageHandler } from "./messageHandler";
 import differenceInMinutes from "date-fns/differenceInMinutes";
 import { RENDER_SUBSCRIPTION_FEED } from "../contentScripts";
+import { sleep } from "./utils";
 import ColorValue = BrowserAction.ColorValue;
 import RequestFilter = WebRequest.RequestFilter;
 import OnCompletedOptions = WebRequest.OnCompletedOptions;
@@ -161,6 +162,16 @@ browser.webRequest.onCompleted.addListener(async details => {
     payload: { feed: { ...feed, feedUrl: details.url } },
   };
 
-  const tabs = await browser.tabs.query({ active: true });
-  browser.tabs.sendMessage(tabs[0].id, message).then(console.log, console.error);
+  let tabs = await browser.tabs.query({ url: details.url });
+  // Wait for tab to stop loading.
+  while (tabs.length > 0 && tabs[0].status == "loading") {
+    tabs = await browser.tabs.query({ url: details.url });
+    await sleep(100);
+  }
+
+  // If tab still exist, and has an id then send a message to notify
+  //  the Content script with the data
+  if (tabs.length > 0 && tabs[0].id) {
+    browser.tabs.sendMessage(tabs[0].id, message).then(console.log, console.error);
+  }
 }, filter, extraInfoSpec);
