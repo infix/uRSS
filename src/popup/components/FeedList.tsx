@@ -10,19 +10,26 @@ type Props = {
   items: Array<{ title: string; id: string, url: string }>
 };
 
-const DragHandle = SortableHandle(() => (
-  <Text px={1} textAlign={"center"} style={{ margin: "auto 0", cursor: "grab" }}
-        fontSize={"large"}>
+const DragHandle = SortableHandle(({ visible }) => (
+  <Text px={1} textAlign={"center"} fontSize={"large"} style={{
+    margin: "auto 0", cursor: "grab", opacity: visible ? 100 : 0,
+    transitionDuration: "200ms",
+  }}>
     ::
   </Text>
 ));
 
-const SortableItem = SortableElement(({ item }) => (
-  <Flex p={1} flexDirection={"row"}>
-    <DragHandle />
-    <FeedListItem {...item} />
-  </Flex>
-));
+const SortableItem = SortableElement(({ item }) => {
+  const [visible, setVisible] = useState(false);
+  return (
+    <Flex onMouseOver={() => setVisible(true)}
+          onMouseOut={() => setVisible(false)}
+          p={1} flexDirection={"row"}>
+      <DragHandle visible={visible} />
+      <FeedListItem {...item} />
+    </Flex>
+  );
+});
 
 const Container = SortableContainer(({ children }) => (
   <Box py={1} style={{ maxHeight: 420, overflowY: "scroll" }}>
